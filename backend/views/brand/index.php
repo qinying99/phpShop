@@ -14,7 +14,10 @@
             <td><?=$brand->id?></td>
             <td><?=$brand->name?></td>
             <td><?=$brand->intro?></td>
-            <td><img src="/<?=$brand->logo?>" height="30"></td>
+            <td><?php
+                $imgPath = strpos($brand->logo,"ttp://")?$brand->logo:"/".$brand->logo;
+                echo \yii\bootstrap\Html::img($imgPath,['height'=>30])
+                ?></td>
             <td><?=$brand->sort?></td>
             <td><?=\backend\models\Brand::$status[$brand->status]?></td>
             <td>

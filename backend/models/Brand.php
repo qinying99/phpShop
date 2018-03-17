@@ -17,7 +17,6 @@ use Yii;
 class Brand extends \yii\db\ActiveRecord
 {
     //设置属性
-    public $imgFile; //用于图片上传
     public static $status=["0"=>"是","1"=>"否"];
     /**
      * @inheritdoc
@@ -26,7 +25,7 @@ class Brand extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'imgFile','sort','status'], 'required'],
+            [['name','sort','status','logo'], 'required'],
             [['intro',],'safe'],
             [['sort'],'integer'],
         ];
@@ -42,7 +41,7 @@ class Brand extends \yii\db\ActiveRecord
             'id' => '编号',
             'name' => '品牌名称',
             'intro' => '简介',
-            'imgFile' => 'LOGO',
+            'logo' => 'LOGO',
             'sort' => '排序',
             'status' => '状态',
         ];
