@@ -19,6 +19,7 @@ use yii\web\Request;
 
 class ArticleController extends Controller
 {
+    //富文本框
     public function actions()
     {
         return [
