@@ -53,6 +53,10 @@ class AdminController extends Controller
             if($admin){
                 //用户名输入正确判断密码是否正确
                 if($admin->password==$model->password){
+                    //登录成功，获取当前的ip和登录时间，并将当前登录时间和ip保存到数据库
+                    $admin->ip=$_SERVER["REMOTE_ADDR"];
+                    $admin->last_time=time();
+                    $admin->save();
                     //如果正确  通过组件登录
                     Yii::$app->user->login($admin);
                     Yii::$app->session->setFlash('success','登录成功');

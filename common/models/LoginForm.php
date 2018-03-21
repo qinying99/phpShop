@@ -18,7 +18,8 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            [['name', 'password'], 'required']
+            [['name', 'password'], 'required'],
+            [['ip','last_time'],'safe']
         ];
     }
     public function attributeLabels()

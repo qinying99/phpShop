@@ -34,7 +34,8 @@ class Admin extends ActiveRecord implements IdentityInterface
         return [
             [["name"],"unique"],
             [["password","sex","add","name","age"],"required"],
-            [["age"],"integer"]
+            [["age"],"integer"],
+            [['create_time','ip'],'safe']
         ];
     }
     public function attributeLabels()
