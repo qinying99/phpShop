@@ -17,9 +17,10 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => 'backend\models\Admin',
+            'enableAutoLogin' => false,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+            'loginUrl'=>array('/admin/login')
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
@@ -42,7 +43,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-            ],
+                ""=>"/admin/login"],
         ],
 
     ],

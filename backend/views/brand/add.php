@@ -9,7 +9,7 @@ echo \manks\FileInput::widget([
     'attribute' => 'logo',
 ]);
 
-echo $form->field($brand,"sort");
-echo $form->field($brand,"status")->inline()->radioList(\backend\models\Brand::$status);
+echo $form->field($brand,"sort")->textInput(["value"=>100]);
+echo $form->field($brand,"status")->inline()->radioList(\backend\models\Brand::$status,["value"=>0]);
 echo \yii\helpers\Html::submitButton("添加",["class"=>"btn btn-info"]);
 \yii\bootstrap\ActiveForm::end();

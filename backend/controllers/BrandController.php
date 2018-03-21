@@ -75,37 +75,21 @@ class BrandController extends Controller
         $zone = 'south_china';      //域名
         //创建七牛云对象
         $qiniu = new Qiniu($ak, $sk, $domain, $bucket, $zone);
-        $key = time();
+        $key = uniqid();
         //拼路径
         $key .= strtolower(strrchr($_FILES['file']['name'], '.'));
         //利用七牛云上传图片
         $qiniu->uploadFile($_FILES['file']['tmp_name'], $key);
         $url = $qiniu->getLink($key);
-        //通过name获取文件路径
-//        $getFile = UploadedFile::getInstanceByName("file");
-//        //将临时文件上传到指定路径
-//        if($getFile!==null){
-//            //拼路径
-//            $imgPath = "images/".time().".".$getFile->extension;
-//            if ($getFile->saveAs($imgPath,false)) {
-        // 正确时， 其中 attachment 指的是保存在数据库中的路径，url 是该图片在web可访问的地址
-        //{"code": 0, "url": "http://domain/图片地址", "attachment": "图片地址"}
+
         $ok = [
             "code" => "0",
             "url" => $url,//在添加页面预览地址
             "attachment" => $url   //上传的图片地址
         ];
-//                return json_encode($ok);
-//            }else{
-//                // 错误时  {"code": 1, "msg": "error"}
-//                //定义一个数组来传递错误信息
-//                $error = [
-//                    'code'=>1,
-//                    "msg"=>"crror"
-//                ];
         return json_encode($ok);
     }
-//        }
+
 
 
 

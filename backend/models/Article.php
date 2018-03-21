@@ -50,7 +50,7 @@ class Article extends ActiveRecord
     }
     //获取分类信息
     public function getCate(){
-        return $this->hasone(ArticleCategory::className(),["id"=>"category_id"]);
+        return $this->hasOne(ArticleCategory::className(),["id"=>"category_id"]);
     }
     //获取文章内容信息
     public function getContent(){
