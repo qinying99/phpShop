@@ -129,3 +129,34 @@ PS：在将三张表联系起来的时候，需要对他们之间的关系（一
 #   难点
 1. 多文件上传
 ```
+## #商城项目实战第四、五天
+### 商品列表和管理员登录的实现
+```
+#	需求
+1.	商品增删改查
+2.	商品列表页可以进行搜索(商品名,商品状态,售价范围 
+3.	新增商品自动生成货号 
+4. 	管理员增删改查
+5.	管理员登录和注销
+
+#   实现
+1.  加密方法：
+    Yii::$app->security->generateRandomString(密码)
+    检验输入密码和加密是否相同：
+    Yii::$app->security->validatePassword(输入嘚密码,数据库嘚密码)
+2.  获取ip方法：  $_SERVER["REMOTE_ADDR"]
+    将ip转化为数字： ip2long   
+    将数字转换为ip：  long2ip
+3.  场景嘚使用：在管理用户嘚时候，需要修改密码时需要用到，
+    当你不想输入密码时使用原本嘚密码就需要用到场景：
+    Model:  创建场景
+    public function scenarios()
+        {
+            $parent =  parent::scenarios();
+            $parent['add'] = ['name','password',"sex","add","age","status"];
+            $parent['edit']= ["name","password","sex","add","age","status"];
+            return $parent;
+        }
+    controller：  设置场景
+    $admin->setScenario(需要进行场景操作嘚页面);
+```

@@ -11,6 +11,7 @@ class LoginForm extends Model
 {
     public $name;
     public $password;
+    public $rememberMe = true;
 
     /**
      * {@inheritdoc}
@@ -19,14 +20,15 @@ class LoginForm extends Model
     {
         return [
             [['name', 'password'], 'required'],
-            [['ip','last_time'],'safe']
+            [['ip','last_time','rememberMe'],'safe']
         ];
     }
     public function attributeLabels()
     {
         return [
             'name'=>'用户名',
-            'password'=>'用户密码'
+            'password'=>'用户密码',
+            'rememberMe'=>'记住密码'
         ];
     }
 

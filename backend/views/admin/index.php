@@ -5,6 +5,7 @@
         <th>年龄</th>
         <th>性别</th>
         <th>地址</th>
+        <th>状态</th>
         <th>创建时间</th>
         <th>最后登录ip</th>
         <th>最后登录时间</th>
@@ -16,6 +17,7 @@
             <td><?=$admin->age?></td>
             <td><?=\backend\models\Admin::$sex[$admin->sex]?></td>
             <td><?=$admin->add?></td>
+            <td><?=\backend\models\Admin::$status[$admin->status]?></td>
             <td><?=date("Ymd H:i:s",$admin->create_time)?></td>
             <td><?=$admin->ip?></td>
             <td><?=date("Ymd H:i:s",$admin->last_time)?></td>

@@ -15,7 +15,10 @@ use yii\web\IdentityInterface;
 
 class Admin extends ActiveRecord implements IdentityInterface
 {
+    //设置属性
     public static $sex=["0"=>"保密","1"=>"女","2"=>"男"];
+    public static $status=["0"=>"禁用","1"=>"激活"];
+
     //添加创建时间
     public function behaviors()
     {
@@ -23,19 +26,29 @@ class Admin extends ActiveRecord implements IdentityInterface
             [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['create_time'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['create_time'],
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['create_time']
                 ],
             ],
         ];
     }
+    //创建场景
+    public function scenarios()
+    {
+        $parent =  parent::scenarios();
+        $parent['add'] = ['name','password',"sex","add","age","status"];
+        $parent['edit']= ["name","password","sex","add","age","status"];
+        return $parent;
+    }
+    //设置规则
     public function rules()
     {
         return [
+            [["sex","add","name","age","status"],"required"],
+            [["password"],"required","on" => "add"], //在add场景必须添加密码
+            [["password"],"safe","on" => "edit"],//在edit场景中可以不修改密码
             [["name"],"unique"],
-            [["password","sex","add","name","age"],"required"],
             [["age"],"integer"],
-            [['create_time','ip'],'safe']
+            [['create_time','ip','auth_key'],'safe']
         ];
     }
     public function attributeLabels()
@@ -45,7 +58,8 @@ class Admin extends ActiveRecord implements IdentityInterface
             'password'=>'用户密码',
             'age'=>'年龄',
             'sex'=>'性别',
-            'add'=>'地址'
+            'add'=>'地址',
+            'status'=>'状态'
         ];
     }
 
@@ -98,7 +112,7 @@ class Admin extends ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
+        return $this->auth_key;
     }
 
     /**
@@ -111,6 +125,7 @@ class Admin extends ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
+        //验证令牌
+        return $this->auth_key===$authKey;
     }
 }

@@ -30,7 +30,7 @@ class AdminController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['login'],
-                        'roles' => ['?'],//代表游客只能访问index页面
+                        'roles' => ['?'],//代表游客只能访问login页面
                     ],
                     [
                         'allow' => true,
@@ -44,23 +44,26 @@ class AdminController extends Controller
     //登录页面
     public function actionLogin()
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
         $model = new LoginForm();
         $request = new Request();
         if($request->isPost){
             $model->load($request->post());
             //通过输入的用户名去查找数据库是否有该条数据，如果有验证密码，如果没有返回登录失败
-            $admin = Admin::find()->where(["name"=>$model->name])->one();
+            $admin = Admin::find()->where(["name"=>$model->name,"status"=>1])->one();
             if($admin){
                 //用户名输入正确判断密码是否正确
-                if($admin->password==$model->password){
+                if(Yii::$app->security->validatePassword($model->password,$admin->password)){
                     //登录成功，获取当前的ip和登录时间，并将当前登录时间和ip保存到数据库
-                    $admin->ip=$_SERVER["REMOTE_ADDR"];
+                    $admin->ip=ip2long($_SERVER["REMOTE_ADDR"]);
                     $admin->last_time=time();
                     $admin->save();
                     //如果正确  通过组件登录
-                    Yii::$app->user->login($admin);
+                    Yii::$app->user->login($admin,$model->rememberMe?3600*24:0);
                     Yii::$app->session->setFlash('success','登录成功');
-                    return $this->redirect(["/goods/index"]);
+                    return $this->redirect(["index"]);
                 }else{
                     $model->addError('password','密码输入错误，请重新输入');
                 }
@@ -77,11 +80,9 @@ class AdminController extends Controller
         Yii::$app->user->logout();
         return $this->goHome();
     }
-
-
     //管理员列表
     public function actionIndex(){
-        $admins = Admin::find()->all();
+        $admins = Admin::find()->where(["status"=>1])->all();
         return $this->render("index",compact("admins"));
     }
     //添加管理员
@@ -91,6 +92,10 @@ class AdminController extends Controller
         if($request->isPost){
             $admin->load($request->post());
             if($admin->validate()){
+                //拿到密码然后进行加密处理
+                $admin->password=Yii::$app->security->generatePasswordHash(($admin->password));
+                //设置令牌
+                $admin->auth_key=Yii::$app->security->generateRandomString();
                 if($admin->save()){
                     \Yii::$app->session->setFlash("success","添加管理员成功");
                     //跳转到登录页面
@@ -104,16 +109,23 @@ class AdminController extends Controller
     public function actionEdit($id){
         $admin = Admin::findOne($id);
         $request = new Request();
+        //设置场景
+        $admin->setScenario('edit');
+        //取出原本的密码
+        $password = $admin->password;
         if($request->isPost){
             $admin->load($request->post());
             if($admin->validate()){
+                //判断用户是否输入密码，如果没有输入便去原本的密码，如果输入了取输入的密码且加密
+                $admin->password=$admin->password?Yii::$app->security->generateRandomString($admin->password):$password;
                 if($admin->save()){
-                    \Yii::$app->session->setFlash("success","添加管理员成功");
+                    \Yii::$app->session->setFlash("success","修改管理员成功");
                     //跳转到登录页面
                     return $this->redirect(["index"]);
                 }
             }
         }
+        $admin->password = null;
         return $this->render("add",compact("admin"));
     }
     //删除

@@ -33,6 +33,9 @@ $fieldOptions2 = [
         <?= $form->field($model, 'password', $fieldOptions2)->label(false)->passwordInput(['placeholder' => "用户密码"]) ?>
 
         <div class="row ">
+            <div class="col-xs-8">
+                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+            </div>
             <div class="col-xs-4 pull-right">
                 <?= Html::submitButton('登录', ["class"=>"btn btn-info"]) ?>
             </div>
