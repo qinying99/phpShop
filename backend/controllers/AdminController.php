@@ -12,6 +12,7 @@ use Yii;
 use backend\models\Admin;
 use common\models\LoginForm;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\Request;
 
@@ -89,20 +90,13 @@ class AdminController extends Controller
     public function actionAdd(){
         $admin = new Admin();
         $request = new Request();
-        if($request->isPost){
-            $admin->load($request->post());
-            if($admin->validate()){
-                //拿到密码然后进行加密处理
-                $admin->password=Yii::$app->security->generatePasswordHash(($admin->password));
-                //设置令牌
-                $admin->auth_key=Yii::$app->security->generateRandomString();
+            if($admin->load($request->post()) && $admin->validate()){
                 if($admin->save()){
                     \Yii::$app->session->setFlash("success","添加管理员成功");
                     //跳转到登录页面
                     return $this->redirect(["index"]);
                 }
             }
-        }
         return $this->render("add",compact("admin"));
     }
     //修改

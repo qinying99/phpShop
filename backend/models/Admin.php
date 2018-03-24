@@ -16,9 +16,9 @@ use yii\web\IdentityInterface;
 class Admin extends ActiveRecord implements IdentityInterface
 {
     //设置属性
-    public static $sex=["0"=>"保密","1"=>"女","2"=>"男"];
-    public static $status=["0"=>"禁用","1"=>"激活"];
 
+    public static $status=["0"=>"禁用","1"=>"激活"];  //设置状态
+    public $role;  //设置角色组
     //添加创建时间
     public function behaviors()
     {
@@ -43,12 +43,11 @@ class Admin extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [["sex","add","name","age","status"],"required"],
+            [["name","status"],"required"],
             [["password"],"required","on" => "add"], //在add场景必须添加密码
             [["password"],"safe","on" => "edit"],//在edit场景中可以不修改密码
             [["name"],"unique"],
-            [["age"],"integer"],
-            [['create_time','ip','auth_key'],'safe']
+            [['create_time','ip','auth_key','role'],'safe']
         ];
     }
     public function attributeLabels()
@@ -56,10 +55,8 @@ class Admin extends ActiveRecord implements IdentityInterface
         return [
             'name'=>'用户名',
             'password'=>'用户密码',
-            'age'=>'年龄',
-            'sex'=>'性别',
-            'add'=>'地址',
-            'status'=>'状态'
+            'status'=>'状态',
+            'role'=>'角色组'
         ];
     }
 
