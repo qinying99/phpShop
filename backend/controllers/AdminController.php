@@ -90,13 +90,21 @@ class AdminController extends Controller
     public function actionAdd(){
         $admin = new Admin();
         $request = new Request();
-            if($admin->load($request->post()) && $admin->validate()){
+        //设置场景
+        $admin->setScenario('add');
+        if($request->isPost){
+            $admin->load($request->post());
+            if($admin->validate()){
+                //获取输入嘚密码并加密
+                $admin->password = Yii::$app->security->generatePasswordHash($admin->password);
                 if($admin->save()){
                     \Yii::$app->session->setFlash("success","添加管理员成功");
                     //跳转到登录页面
                     return $this->redirect(["index"]);
                 }
             }
+        }
+        $admin->password = null;
         return $this->render("add",compact("admin"));
     }
     //修改

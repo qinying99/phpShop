@@ -14,6 +14,6 @@ echo TreeGrid::widget([
         'id',
         'parent_id',
         'intro',
-        ['class' => 'yii\grid\ActionColumn']
+        ['class' => \backend\components\ActionColumn::className()]
     ]
 ]);

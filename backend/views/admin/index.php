@@ -2,7 +2,6 @@
 <table class="table">
     <tr>
         <th>用户名</th>
-        <th>角色组</th>
         <th>状态</th>
         <th>创建时间</th>
         <th>最后登录ip</th>
@@ -14,7 +13,11 @@
             <td><?=$admin->name?></td>
             <td><?=\backend\models\Admin::$status[$admin->status]?></td>
             <td><?=date("Ymd H:i:s",$admin->create_time)?></td>
-            <td><?=$admin->ip?></td>
+            <td><?php
+
+                echo long2ip($admin->ip);
+
+                ?></td>
             <td><?=date("Ymd H:i:s",$admin->last_time)?></td>
             <td>
                 <a href="<?=\yii\helpers\Url::to(["admin/edit","id"=>$admin->id])?>" class="btn btn-success">编辑</a>
