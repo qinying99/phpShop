@@ -5,7 +5,13 @@
 */
 
 $(function(){
-	
+    //总计金额
+    var total = 0;
+    $(".col5 span").each(function(){
+        total += parseFloat($(this).text());
+    });
+
+    $("#total").text(total.toFixed(2));
 	//减少
 	$(".reduce_num").click(function(){
 		var amount = $(this).parent().find(".amount");
@@ -14,6 +20,11 @@ $(function(){
 		} else{
 			$(amount).val(parseInt($(amount).val()) - 1);
 		}
+		//找出当点击减号时产生的商品数量和商品id  并将他传到后台
+		var num = $(this).next().val();
+		var id = $(this).parent().parent().attr('data-id');
+		$.getJSON('/cart/edit-cart',{id:id,amount:num},function (data) {
+        })
 		//小计
 		var subtotal = parseFloat($(this).parent().parent().find(".col3 span").text()) * parseInt($(amount).val());
 		$(this).parent().parent().find(".col5 span").text(subtotal.toFixed(2));
@@ -30,6 +41,12 @@ $(function(){
 	$(".add_num").click(function(){
 		var amount = $(this).parent().find(".amount");
 		$(amount).val(parseInt($(amount).val()) + 1);
+        //找出当点击加号时产生的商品数量和商品id  并将他传到后台
+        var num = $(this).prev().val();
+        var id = $(this).parent().parent().attr('data-id');
+        $.getJSON('/cart/edit-cart',{id:id,amount:num},function (data) {
+        })
+
 		//小计
 		var subtotal = parseFloat($(this).parent().parent().find(".col3 span").text()) * parseInt($(amount).val());
 		$(this).parent().parent().find(".col5 span").text(subtotal.toFixed(2));
@@ -48,6 +65,12 @@ $(function(){
 			alert("商品数量最少为1");
 			$(this).val(1);
 		}
+        //直接输入时产生的商品数量和商品id  并将他传到后台
+        var num = $(this).val();
+        var id = $(this).parent().parent().attr('data-id');
+        $.getJSON('/cart/edit-cart',{id:id,amount:num},function (data) {
+
+        })
 		//小计
 		var subtotal = parseFloat($(this).parent().parent().find(".col3 span").text()) * parseInt($(this).val());
 		$(this).parent().parent().find(".col5 span").text(subtotal.toFixed(2));
@@ -60,4 +83,12 @@ $(function(){
 		$("#total").text(total.toFixed(2));
 
 	});
+	//删除
+	$(".col6 a").click(function () {
+        var id = $(this).parent().parent().attr('data-id');
+		$.getJSON('/cart/del-cart',{id:id},function (data) {
+			window.location.href='/cart/index';
+        })
+    })
+
 });

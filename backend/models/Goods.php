@@ -76,4 +76,8 @@ class Goods extends ActiveRecord
     public function getPrint(){
         return $this->hasMany(GoodsPrint::className(),['goods_id'=>'id']);
     }
+    //获取所有嘚图片
+    public function getImgs(){
+        return $this->hasMany(GoodsPrint::className(),['goods_id'=>'id']);
+    }
 }

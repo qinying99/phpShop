@@ -11,23 +11,7 @@
 </head>
 <body>
 <!-- 顶部导航 start -->
-<div class="topnav">
-    <div class="topnav_bd w990 bc">
-        <div class="topnav_left">
-
-        </div>
-        <div class="topnav_right fr">
-            <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
-                <li class="line">|</li>
-                <li>我的订单</li>
-                <li class="line">|</li>
-                <li>客户服务</li>
-
-            </ul>
-        </div>
-    </div>
-</div>
+<?php include Yii::getAlias('@app')."/views/common/nav.php"?>
 <!-- 顶部导航 end -->
 
 <div style="clear:both;"></div>
@@ -68,7 +52,7 @@
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
-                        <input type="checkbox" class="chb"  name="checkbox"/> 保存登录信息
+                        <input type="checkbox" class="chb"  name="checkbox" id="rememberMe"/> 保存登录信息
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
@@ -143,7 +127,7 @@
 //                        icon: 16
 //                    });
                     //跳转到首页
-                    window.location.href = '/user/index';
+                    window.location.href = '/index/index';
                 }
                 if(user.status==0){
                     $.each(user.data,function (k,v) {

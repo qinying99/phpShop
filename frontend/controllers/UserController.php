@@ -41,6 +41,8 @@ class UserController extends \yii\web\Controller
                         $user->login_ip=ip2long($_SERVER["REMOTE_ADDR"]);
                         $user->login_time=time();
                         if($user->save(false)){
+                            //如果正确  通过组件登录
+                            \Yii::$app->user->login($user,$model->rememberMe?3600*24:0);
                             //如果成功
                             $result = [
                                 'status'=>1,
@@ -77,13 +79,19 @@ class UserController extends \yii\web\Controller
         return $this->render('login');
     }
     /**
+     * 退出登录
+     */
+    public function actionLogout()
+    {
+        \Yii::$app->user->logout();
+        return $this->redirect(['index/index']);
+    }
+    /**
      * 用户注册
      */
     public function actionReg(){
        if(\Yii::$app->request->isPost){
            $user = new User();
-           //设置场景
-           $user->scenarios('reg');
            $user->load(\Yii::$app->request->post());
            if ($user->validate()){
                $user->password_hash = \Yii::$app->security->generatePasswordHash($user->password);

@@ -15,6 +15,19 @@ use yii\web\Request;
 
 class GoodsController extends \yii\web\Controller
 {
+
+    //富文本框
+    public function actions()
+    {
+        return [
+            'upload' => [
+                'class' => 'kucha\ueditor\UEditorAction',
+                'config' => [
+                    "imageUrlPrefix"  => "http://admin.yiishop.com",//图片访问路径前缀
+            ],
+            ]
+        ];
+    }
     //显示所有的商品信息
     public function actionIndex()
     {
