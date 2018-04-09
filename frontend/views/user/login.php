@@ -117,17 +117,34 @@
 <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="/layer/layer.js"></script>
 <script type="text/javascript">
+    function getQueryVariable(variable)
+    {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
     $(function () {
         //当点击登录按钮时，通过ajax提交数据
         $(".login_btn").click(function () {
             $.post("/user/login",$("#login").serialize(),function (user) {
                 console.dir(user)
                 if(user.status==1){
-//                    layer.msg('登录中...', {
-//                        icon: 16
-//                    });
-                    //跳转到首页
-                    window.location.href = '/index/index';
+                    layer.msg('登录中...', {
+                        icon: 16
+                    });
+                    var url = getQueryVariable('url');
+                    if(url===false){
+                        //跳转到首页
+                        window.location.href = '/index/index';
+                    }else{
+                        //跳转到订单页
+                        window.location.href=decodeURIComponent(url);
+                    }
+
                 }
                 if(user.status==0){
                     $.each(user.data,function (k,v) {

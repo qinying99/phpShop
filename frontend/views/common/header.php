@@ -74,14 +74,9 @@
         <div class="cart fl">
             <dl>
                 <dt>
-                    <a href="">去购物车结算</a>
+                    <a href="/cart/index">去购物车结算</a>
                     <b></b>
                 </dt>
-                <dd>
-                    <div class="prompt">
-                        购物车中还没有商品，赶紧选购吧！
-                    </div>
-                </dd>
             </dl>
         </div>
         <!-- 购物车 end -->
@@ -90,6 +85,8 @@
 
     <div style="clear:both;"></div>
 
+<!--    开启ob缓存-->
+    <?php ob_start()?>
     <!-- 导航条部分 start -->
     <div class="nav w1210 bc mt10">
         <!--  商品分类部分 start-->
@@ -150,5 +147,20 @@
         </div>
     </div>
     <!-- 导航条部分 end -->
+<!--    得到ob缓存-->
+    <?php
+        $html = ob_get_clean();
+        //判断是不是首页
+        $name = Yii::$app->controller->id . "/" . Yii::$app->controller->action->id == "index/index"?"index":"other";
+        //判断缓存中是否存在
+        if(Yii::$app->cache->get($name)){
+            echo Yii::$app->cache->get($name);
+        }else{
+            //存到缓存
+            Yii::$app->cache->set($name,$html);
+            //输出内容
+            echo $html;
+        }
+    ?>
 </div>
 <!-- 头部 end-->

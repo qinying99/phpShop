@@ -10,6 +10,7 @@ namespace frontend\controllers;
 
 
 use backend\models\Goods;
+use frontend\components\ShopCart;
 use frontend\models\Cart;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -54,20 +55,22 @@ class CartController extends Controller
         //判断用户是否登录
         if(\Yii::$app->user->isGuest){
             //未登录
-            //获取cookie嘚数据
-            $cart = \Yii::$app->request->cookies->getValue('cart',[]);
-            //修改对应的数据
-            $cart[$id]=$amount;
-            //再将数据保存到购物车
-            //创建设置cookie对象
-            $setCookie = \Yii::$app->response->cookies;
-            //创建一个cookie对象
-            $cookie = new Cookie([
-                'name' => 'cart',
-                'value' => $cart
-            ]);
-            //通过设置cookie对象来添加一个cookie对象
-            $setCookie->add($cookie);
+//            //获取cookie嘚数据
+//            $cart = \Yii::$app->request->cookies->getValue('cart',[]);
+//            //修改对应的数据
+//            $cart[$id]=$amount;
+//            //再将数据保存到购物车
+//            //创建设置cookie对象
+//            $setCookie = \Yii::$app->response->cookies;
+//            //创建一个cookie对象
+//            $cookie = new Cookie([
+//                'name' => 'cart',
+//                'value' => $cart
+//            ]);
+//            //通过设置cookie对象来添加一个cookie对象
+//            $setCookie->add($cookie);
+            //通过封装修改
+            (new ShopCart())->Edit($id,$amount)->save();
         }else{
             //已登录
             $user_id =\Yii::$app->user->id;
@@ -83,20 +86,22 @@ class CartController extends Controller
         //判断是否登录
         if(\Yii::$app->user->isGuest){
             //未登录删除cookie
-            //获取cookie数据
-            $cart = \Yii::$app->request->cookies->getValue('cart',[]);
-            //删除数据
-            unset($cart[$id]);
-            //再将数据保存到购物车
-            //创建设置cookie对象
-            $setCookie = \Yii::$app->response->cookies;
-            //创建一个cookie对象
-            $cookie = new Cookie([
-                'name' => 'cart',
-                'value' => $cart
-            ]);
-            //通过设置cookie对象来添加一个cookie对象
-            $setCookie->add($cookie);
+//            //获取cookie数据
+//            $cart = \Yii::$app->request->cookies->getValue('cart',[]);
+//            //删除数据
+//            unset($cart[$id]);
+//            //再将数据保存到购物车
+//            //创建设置cookie对象
+//            $setCookie = \Yii::$app->response->cookies;
+//            //创建一个cookie对象
+//            $cookie = new Cookie([
+//                'name' => 'cart',
+//                'value' => $cart
+//            ]);
+//            //通过设置cookie对象来添加一个cookie对象
+//            $setCookie->add($cookie);
+            //通过封装删除cookie
+            (new ShopCart())->Del($id)->save();
         }else{
             //已登录删除数据嘚数据
             $user_id =\Yii::$app->user->id;

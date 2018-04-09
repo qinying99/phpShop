@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\LoginForm;
+use frontend\components\ShopCart;
 use frontend\models\User;
 use Mrgoon\AliSms\AliSms;
 use yii\helpers\Json;
@@ -43,6 +44,8 @@ class UserController extends \yii\web\Controller
                         if($user->save(false)){
                             //如果正确  通过组件登录
                             \Yii::$app->user->login($user,$model->rememberMe?3600*24:0);
+                            //查看cookie中是否有数据 如果有将其保存到数据库并清除cookie
+                            (new ShopCart())->Dnsyn()->Flush()->save();
                             //如果成功
                             $result = [
                                 'status'=>1,

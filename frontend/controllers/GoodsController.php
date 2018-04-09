@@ -11,6 +11,7 @@ namespace frontend\controllers;
 
 use backend\models\Goods;
 use backend\models\GoodsCategory;
+use frontend\components\ShopCart;
 use frontend\models\Cart;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -54,29 +55,31 @@ class GoodsController extends Controller
     public function actionAddCart($id,$amount){
         if(\Yii::$app->user->isGuest){
             //未登录 保存到cookie
-            //得到cookie对象
-            $getCookie = \Yii::$app->request->cookies;
-            //得到购物车原来嘚数据
-            $cart = $getCookie->getValue('cart',[]  );
-
-            //判断当前添加嘚商品id是否存在购物车中 如果在 便继续添加 不在就新增
-           if(array_key_exists($id,$cart)){
-                //存在  在原本嘚cookie上添加$amount
-               $cart[$id]+=$amount;
-           }else{
-               //如果不存在 便新增cookie
-               $cart[$id]=(int)$amount;
-           }
-            //创建设置cookie对象
-            $setCookie = \Yii::$app->response->cookies;  //response 设置  request  得到
-            //创建一个cookie对象
-            $cookie = new Cookie([
-                    'name'=>'cart',
-                    'value' => $cart
-                ]
-            );
-            //通过设置cookie对象来添加cookie
-            $setCookie->add($cookie);
+//            //得到cookie对象
+//            $getCookie = \Yii::$app->request->cookies;
+//            //得到购物车原来嘚数据
+//            $cart = $getCookie->getValue('cart',[]  );
+//
+//            //判断当前添加嘚商品id是否存在购物车中 如果在 便继续添加 不在就新增
+//           if(array_key_exists($id,$cart)){
+//                //存在  在原本嘚cookie上添加$amount
+//               $cart[$id]+=$amount;
+//           }else{
+//               //如果不存在 便新增cookie
+//               $cart[$id]=(int)$amount;
+//           }
+//            //创建设置cookie对象
+//            $setCookie = \Yii::$app->response->cookies;  //response 设置  request  得到
+//            //创建一个cookie对象
+//            $cookie = new Cookie([
+//                    'name'=>'cart',
+//                    'value' => $cart
+//                ]
+//            );
+//            //通过设置cookie对象来添加cookie
+//            $setCookie->add($cookie);
+            //通过封装shopcart
+            (new ShopCart())->Add($id,$amount)->save();
             return $this->redirect(['cart/index']);
         }else{
             //已登录保存到数据库
@@ -100,10 +103,5 @@ class GoodsController extends Controller
         }
     }
 
-//测试是否得到了cookie
-    public function actionGet(){
-        $getCookeie = \Yii::$app->request->cookies;
-        var_dump($getCookeie->getValue('cart'));
-    }
 
 }
